@@ -2,17 +2,22 @@ import React, { Component } from 'react';
 import line from './line';
 
 class LineChart extends Component {
-  
-  static defaultProps = {
-    chart:  line,
-  }
 
+  static defaultProps = {
+    chart: line,
+    height: 600,
+    width: 400, 
+    margin: { top: 30, right: 0, bottom: 30, left: 40 },
+    stroke : 'red',
+    fill : 'none',
+    strokeWidth : 1.5
+  }
 
   constructor(props) {
     super(props);
     this.setRef = this.setRef.bind(this);
     this.updateData = this.updateData.bind(this);
-    this.state = {update:false}
+    this.state = { update: false }
   }
 
   componentDidMount() {
@@ -58,17 +63,17 @@ class LineChart extends Component {
     this.rootNode = node;
   }
 
-  updateData(){
+  updateData() {
     console.log("click")
     // this.props.data = [5,8,9,6,5,30,9]
-    console.log(this.props.data,"ljkkjk")
+    console.log(this.props.data, "ljkkjk")
   }
 
   render() {
     return (
       <div>
-      <button onClick={this.updateData}>Update data</button>
-      <div className="bar-container" ref={this.setRef} />
+        <button onClick={this.updateData}>Update data</button>
+        <div className="bar-container" ref={this.setRef} />
       </div>
     );
   }

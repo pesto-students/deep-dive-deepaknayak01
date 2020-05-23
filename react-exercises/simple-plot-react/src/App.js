@@ -4,14 +4,14 @@ import LineChart from './charts/line/line-chart';
 
 import BarChart from './charts/bar/bar-chart';
 
-import { generateLineGraphData } from './utils'
+import { generateLineGraphData ,generateBarGraphData} from './utils'
 
 function App()  {
   return (
     <div className="App">
-      { <LineChart data={generateLineGraphData()} />
+      { <LineChart data={generateLineGraphData()}  height= {600} width ={400}  margin= {{ top: 30, right: 10, bottom: 20, left: 50} }/>
       }
-      {/* <BarChart data={[9, 4, 6, 8, 10, 14, 20, 5, 2]} fillColor={'grey'} individualBarWidth={40} width={700} height={500} scale={20} /> */}
+      <BarChart data={generateBarGraphData()} color={'green'} margin = {{top: 20, right: 10, bottom: 20, left: 50}} width={600} height={600} scale={30} />
 
     </div>
   );

@@ -1,36 +1,62 @@
 import { select } from 'd3-selection';
-
+import * as d3 from 'd3'
 class Bar {
 
-  create = (el, data, configuration = { height: 600, width: 400, scale: 10, individualBarWidth: 40, fillColor: 'blue' }) => {
+  create = (el, data, configuration ) => {
 
+    
+    const margin = configuration.margin
     const height = configuration.height;
     const width = configuration.width;
-    const scale = configuration.scale;
+    const color = configuration.color
 
-    const svgElement = select(el)
+    let y = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.value)]).nice()
+      .range([height - margin.bottom, margin.top])
+
+    let x = d3.scaleBand()
+      .domain(d3.range(data.length))
+      .range([margin.left, width - margin.right])
+      .padding(0.1)
+
+    let yAxis = g => g
+      .attr("transform", `translate(${margin.left},0)`)
+      .call(d3.axisLeft(y).ticks(null, data.format))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.append("text")
+        .attr("x", - margin.left)
+        .attr("y", 10)
+        .attr("fill", "currentColor")
+        .attr("text-anchor", "start")
+        .text(data.y))
+
+    let xAxis = g => g
+      .attr("transform", `translate(0,${height - margin.bottom})`)
+      .call(d3.axisBottom(x).tickFormat(i => data[i].name).tickSizeOuter(0))
+
+    const svg = select(el)
       .append("svg")
       .attr("width", width)
       .attr("height", height)
       .style("border", "1px solid black")
 
-    svgElement.selectAll("rect")
-      .data(data).enter()
-      .append("rect")
-      .attr("width", configuration.individualBarWidth)
-      .attr("height", (datapoint) => datapoint * scale)
-      .attr("fill", configuration.fillColor)
-      .attr("x", (datapoint, iteration) => iteration * 45)
-      .attr("y", (datapoint) => height - datapoint * scale)
+    svg.append("g")
+      .attr("fill", color)
+      .selectAll("rect")
+      .data(data)
+      .join("rect")
+      .attr("x", (d, i) => x(i))
+      .attr("y", d => y(d.value))
+      .attr("height", d => y(0) - y(d.value))
+      .attr("width", x.bandwidth());
 
-    svgElement.selectAll("text")
-      .data(data).enter()
-      .append("text")
-      .attr("x", (datapoint, i) => i * 45 + 10)
-      .attr("y", (datapoint, i) => height - datapoint * scale - 10)
-      .text(datapoint => datapoint)
+    svg.append("g")
+      .call(xAxis);
 
-    return svgElement
+    svg.append("g")
+      .call(yAxis);
+
+    return svg;
   };
 
   update = (el, data, configuration = {}, chart) => {
@@ -38,7 +64,7 @@ class Bar {
     const container = select(el);
 
 
-    console.log("in update")
+    console.log("in update".chart)
 
     // Calls the chart with the container and dataset
     if (data && chart) {

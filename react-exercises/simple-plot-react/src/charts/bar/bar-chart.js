@@ -5,14 +5,17 @@ class BarChart extends Component {
 
   static defaultProps = {
     chart: bar,
+    height: 600, width: 400, scale: 10,
+    color: 'blue',
+    margin: { top: 30, right: 0, bottom: 30, left: 40 }
   }
 
   constructor(props) {
     super(props);
+    //TODO: validate props types
     this.setRef = this.setRef.bind(this);
     this.updateData = this.updateData.bind(this);
-    this.state = {update:false,data:this.props.data}
-    // this._chart=undefined
+    this.state = { update: false, data: this.props.data }
   }
 
   componentDidMount() {
@@ -40,7 +43,7 @@ class BarChart extends Component {
   }
 
   updateChart() {
-    console.log("update",this._chart)
+    console.log("update", this._chart)
     this.props.chart.update(
       this.rootNode,
       this.state.data,
@@ -58,15 +61,15 @@ class BarChart extends Component {
   setRef(node) {
     this.rootNode = node;
   }
-  updateData(){
-    this.setState({data:[5,8,9,6,5,30,9]})
+  updateData() {
+    this.setState({ data: [5, 8, 9, 6, 5, 30, 9] })
   }
 
   render() {
     return (
       <div>
-      <button onClick={this.updateData}>Update data</button>
-      <div className="bar-container" ref={this.setRef} />
+        <button onClick={this.updateData}>Update data</button>
+        <div className="bar-container" ref={this.setRef} />
       </div>
     );
   }

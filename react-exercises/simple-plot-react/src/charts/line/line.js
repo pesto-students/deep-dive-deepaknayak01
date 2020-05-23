@@ -2,23 +2,22 @@ import { select } from 'd3-selection';
 import * as d3 from 'd3'
 class Line {
 
-  create = (el, data, configuration = { height: 600, width: 400, scale: 10, individualBarWidth: 40, fillColor: 'blue' }) => {
+  create = (el, data, configuration ) => {
 
-    const scale = configuration.scale;
-    const stroke = 'red';
-    const fill = 'none';
-    const strokeWidth = 1.5;
-    const interpolateType = 'cardinal';
-
-    const width = 500, height = 350, margin = 20;
+    const margin = configuration.margin
+    const stroke = configuration.stroke;
+    const fill = configuration.fill;
+    const strokeWidth = configuration.strokeWidth;
+    const width = configuration.width
+    const height = configuration.height
 
     const x = d3.scaleLinear()
       .domain(d3.extent(data, d => d.x))
-      .range([margin, width])
+      .range([margin.left, width - margin.right])
     
     const y = d3.scaleLinear()
       .domain([0, d3.max(data, d => d.y)])
-      .range([height, margin])
+      .range([height - margin.bottom, margin.top])
 
     const line = d3.line()
       .x(d => x(d.x))
@@ -43,6 +42,7 @@ class Line {
       .append("svg")
       .attr("width", width)
       .attr("height", height)
+      .style("border", "1px solid black")
 
     svgElement.append("g")
       .call(xAxis);
