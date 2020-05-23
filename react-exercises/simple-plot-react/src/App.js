@@ -11,7 +11,7 @@ function App()  {
     <div className="App">
       { <LineChart data={generateLineGraphData()} />
       }
-      <BarChart data={[2, 4, 6, 8, 10, 14, 20, 5, 2]} fillColor={'grey'} individualBarWidth={40} width={700} height={500} scale={20} />
+      {/* <BarChart data={[9, 4, 6, 8, 10, 14, 20, 5, 2]} fillColor={'grey'} individualBarWidth={40} width={700} height={500} scale={20} /> */}
 
     </div>
   );

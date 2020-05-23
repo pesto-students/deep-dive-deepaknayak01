@@ -11,6 +11,8 @@ class LineChart extends Component {
   constructor(props) {
     super(props);
     this.setRef = this.setRef.bind(this);
+    this.updateData = this.updateData.bind(this);
+    this.state = {update:false}
   }
 
   componentDidMount() {
@@ -56,9 +58,18 @@ class LineChart extends Component {
     this.rootNode = node;
   }
 
+  updateData(){
+    console.log("click")
+    // this.props.data = [5,8,9,6,5,30,9]
+    console.log(this.props.data,"ljkkjk")
+  }
+
   render() {
     return (
+      <div>
+      <button onClick={this.updateData}>Update data</button>
       <div className="bar-container" ref={this.setRef} />
+      </div>
     );
   }
 }

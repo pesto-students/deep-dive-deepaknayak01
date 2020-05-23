@@ -10,17 +10,20 @@ class BarChart extends Component {
   constructor(props) {
     super(props);
     this.setRef = this.setRef.bind(this);
+    this.updateData = this.updateData.bind(this);
+    this.state = {update:false,data:this.props.data}
+    // this._chart=undefined
   }
 
   componentDidMount() {
-    this._createChart();
+    this.createChart();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     if (!this._chart) {
-      this._createChart();
+      this.createChart();
     } else {
-      this._updateChart();
+      this.updateChart();
     }
   }
 
@@ -28,18 +31,19 @@ class BarChart extends Component {
     this.props.chart.destroy(this.rootNode);
   }
 
-  _createChart() {
+  createChart() {
     this._chart = this.props.chart.create(
       this.rootNode,
-      this.props.data,
+      this.state.data,
       this.getChartConfig()
     );
   }
 
-  _updateChart() {
+  updateChart() {
+    console.log("update",this._chart)
     this.props.chart.update(
       this.rootNode,
-      this.props.data,
+      this.state.data,
       this.getChartConfig(),
       this._chart
     );
@@ -54,10 +58,16 @@ class BarChart extends Component {
   setRef(node) {
     this.rootNode = node;
   }
+  updateData(){
+    this.setState({data:[5,8,9,6,5,30,9]})
+  }
 
   render() {
     return (
+      <div>
+      <button onClick={this.updateData}>Update data</button>
       <div className="bar-container" ref={this.setRef} />
+      </div>
     );
   }
 }
