@@ -62,7 +62,7 @@ class BarChart extends Component {
     this.rootNode = node;
   }
   updateData() {
-    this.setState({ data: [5, 8, 9, 6, 5, 30, 9] })
+    this.setState({ data: [{ "name": "5", "value": 5 }, { "name": "2", "value": 10 }, { "name": "7", "value": 20 }] })
   }
 
   render() {
