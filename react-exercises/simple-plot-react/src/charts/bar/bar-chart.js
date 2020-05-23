@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import bar from './bar';
+import { generateBarGraphData} from '../../utils'
 
 class BarChart extends Component {
 
@@ -15,7 +16,7 @@ class BarChart extends Component {
     //TODO: validate props types
     this.setRef = this.setRef.bind(this);
     this.updateData = this.updateData.bind(this);
-    this.state = { update: false, data: this.props.data }
+    this.state = { update: false, data: this.props.data,dataType:true }
   }
 
   componentDidMount() {
@@ -31,7 +32,7 @@ class BarChart extends Component {
   }
 
   componentWillUnmount() {
-    this.props.chart.destroy(this.rootNode);
+    this.props.chart.destroy(this._chart);
   }
 
   createChart() {
@@ -62,7 +63,8 @@ class BarChart extends Component {
     this.rootNode = node;
   }
   updateData() {
-    this.setState({ data: [{ "name": "5", "value": 5 }, { "name": "2", "value": 10 }, { "name": "7", "value": 20 }] })
+    let data = generateBarGraphData(this.state.dataType)
+    this.setState({ data: data , dataType:!this.state.dataType })
   }
 
   render() {

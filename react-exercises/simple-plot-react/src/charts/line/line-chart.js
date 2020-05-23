@@ -33,7 +33,7 @@ class LineChart extends Component {
   }
 
   componentWillUnmount() {
-    this.props.chart.destroy(this.rootNode);
+    this.props.chart.destroy(this._chart);
   }
 
   _createChart() {

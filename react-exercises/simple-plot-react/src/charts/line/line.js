@@ -62,23 +62,12 @@ class Line {
   };
 
   update = (el, data, configuration = {}, chart) => {
-    // const container = select(el);
-
-    // validateContainer(container);
-    // validateConfiguration(chart, configuration);
-    // applyConfiguration(chart, configuration);
-
-    // // Calls the chart with the container and dataset
-    // if (data) {
-    //     container.datum(data).call(chart);
-    // } else {
-    //     container.call(chart);
-    // }
-
-    // return chart;
+    
   };
 
-  destroy = () => { };
+  destroy = (svg) => {
+    svg.selectAll('*').remove()
+   };
 
 
 }
