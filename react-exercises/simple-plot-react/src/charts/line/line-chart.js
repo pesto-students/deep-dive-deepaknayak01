@@ -72,7 +72,7 @@ class LineChart extends Component {
   render() {
     return (
       <div>
-        <button onClick={this.updateData}>Update data</button>
+        {/* <button onClick={this.updateData}>Update data</button> */}
         <div className="bar-container" ref={this.setRef} />
       </div>
     );
