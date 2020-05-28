@@ -7,7 +7,7 @@ let connectionInstance;
 
 const getDbClient = async () => {
   if (!connectionInstance) {
-    connectionInstance = await MongoClient.connect(MONGO_URL, { useNewUrlParser: true });
+    connectionInstance = await MongoClient.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
   }
   return connectionInstance;
 };
