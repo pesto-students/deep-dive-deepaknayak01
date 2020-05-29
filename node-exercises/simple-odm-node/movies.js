@@ -1,19 +1,31 @@
 const ODM = require('./index');
 
-const odm = new ODM();
+const odm = new ODM('mongodb://localhost:27017', 'video');
 let db;
 
 const check = async () => {
-    await odm.connect('mongodb://localhost:27017');
-    db = await odm.db('video');
-    //console.log(db);
+    await odm.connect();
+    db = await odm.db();
     return db;
 }
 
 const getMoviesCount = async () => {
     await check();
-    const movie = await odm.all();
-    console.log(1, movie);
+
+    const movieAll = await odm.all();
+    //console.log(1, movieAll.length);
+
+    const movieAnd = await odm.and([{"imdb.rating": 9.2}, {year: 2000}]);
+    //console.log(1, movieAnd);
+
+    const movieOr = await odm.or([{"imdb.rating": 9.2}, {year: 2000}]);
+    //console.log(1, movieOr);
+
+    const count = await odm.count({"imdb.rating": 8});
+    //console.log(1, count);
+
+    const findOne = await odm.findOne({"imdb.rating": 8});
+    //console.log(1, findOne);
 };
 
 getMoviesCount();
