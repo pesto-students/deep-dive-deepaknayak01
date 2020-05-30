@@ -39,7 +39,7 @@ describe('Mongo Queries', () => {
 
     // 2
     describe('movieRating', () => {
-      test('should return title of the movie with rating 9.2 and year 1974', async () => {
+      test('should return title of the movie with rating 9.2 and year 2000', async () => {
         expect(await movieRating(db)).toEqual({ title: 'Bollywood im Alpenrausch' });
       });
     });

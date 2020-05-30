@@ -11,6 +11,7 @@ const getData = async () => {
   incrementalUpdate(db);
   fieldArraySize(db);
   regexSearch(db);
+  movieRating(db);
 }
 
 getData()
@@ -25,17 +26,14 @@ const getMoviesCount = async (db) => {
 };
 
 /* Q2 (*)
-  Return the first movie with imdb rating = 9.2 and year = 1974.
+  Return the first movie with imdb rating = 9.2 and year = 2000.
   Also, use mongodb projections to only get title from mongodb as opposed
   to accessing title property from the object
 */
 const movieRating = async () => {
-  const firstMovie = await db.collection('movieDetails').findOne(
-    {
-      "imdb.rating": 9.2,
-      year: 2000
-  });
-  return {'title': firstMovie.title};
+  const firstMovie = await db.collection('movieDetails').find({ year: 2000, "imdb.rating": 9.2 }).project({ title: 1, _id: 0 }).toArray();
+  console.log(firstMovie[0]);
+  return firstMovie[0];
 };
 
 /* Q3 (*)
@@ -62,10 +60,12 @@ const writersIntersection = async (db) => {
 const writersUnion = async () => {
   const moviesAnyWriter = await db.collection('movieDetails').countDocuments({
     $or: [{
-    writers: { $in: ['Roberto Orci',
-      'Alex Kurtzman',
-      'Damon Lindelof',
-      'Gene Roddenberry']}
+      writers: {
+        $in: ['Roberto Orci',
+          'Alex Kurtzman',
+          'Damon Lindelof',
+          'Gene Roddenberry']
+      }
     }]
   });
   return moviesAnyWriter;
@@ -111,8 +111,8 @@ const comparisonOperator = async (db) => {
   being "UNRATED" or having no "rated" field at all
 */
 const trimUnrated = async () => {
-  const ratedMovies = await db.collection('movieDetails').countDocuments({ 
-    $or: [{ 'rated': { $ne: 'UNRATED' } }, { 'rated': { $exists: false } }] 
+  const ratedMovies = await db.collection('movieDetails').countDocuments({
+    $or: [{ 'rated': { $ne: 'UNRATED' } }, { 'rated': { $exists: false } }]
   });
   return ratedMovies;
 };
@@ -131,8 +131,8 @@ const unratedByTomato = async (db) => {
   metacritic >= 90
 */
 const goodMovies = async () => {
-  const higherImdbRated = await db.collection('movieDetails').countDocuments({ 
-    $or: [{ 'rated': { $gte: 9 } }, { 'metacritic': { $gte: 90 } }] 
+  const higherImdbRated = await db.collection('movieDetails').countDocuments({
+    $or: [{ 'rated': { $gte: 9 } }, { 'metacritic': { $gte: 90 } }]
   });
   return higherImdbRated;
 };
@@ -153,8 +153,10 @@ const regexSearch = async (db) => {
 */
 const arrayAll = async () => {
   const genresExists = await db.collection('movieDetails').find({
-    genres: {$all: ['Adventure',
-    'Action']}
+    genres: {
+      $all: ['Adventure',
+        'Action']
+    }
   }).toArray();
   return genresExists.length;
 };
