@@ -1,24 +1,25 @@
 const { MongoClient } = require('mongodb');
 
 class ODM {
-    constructor(url, dbName) {
+    constructor(url, dbName, collection) {
         this.connectInstance = '';
-        this.check = '';
+        this.dbInstance = '';
         this.url = url;
         this.dbName = dbName;
+        this.collection = collection;
     }
 
     async connect() {
         try {
-            if(!this.url) {
+            if (!this.url) {
                 throw 'Db not connected. Provide the URL';
             }
-            if(!this.dbName) {
+            if (!this.dbName) {
                 throw 'Db not connected. Provide the Database name';
             }
             this.connectInstance = await MongoClient.connect(this.url, { useNewUrlParser: true, useUnifiedTopology: true });
             return this.connectInstance;
-        } catch(message) {
+        } catch (message) {
             throw new Error(message);
         }
     }
@@ -28,59 +29,59 @@ class ODM {
             throw new Error('Db not connected');
         }
 
-        this.check = this.connectInstance.db(this.dbName);
-        return this.check;
+        this.dbInstance = this.connectInstance.db(this.dbName);
+        return this.dbInstance;
     }
 
     async all() {
-        if (!this.check) {
+        if (!this.dbInstance) {
             throw new Error('Please provide collection');
         }
-        const response = this.check.collection('movieDetails').find({}).toArray();
+        const response = await this.dbInstance.collection(this.collection).find({}).toArray();
         return response;
     }
 
     async and(param) {
-        if (!this.check) {
+        if (!this.dbInstance) {
             throw new Error('Please provide collection');
         }
-        if(!param) {
+        if (!param) {
             throw new Error('Please provide parameters')
         }
-        const response = this.check.collection('movieDetails').find({$and: param}).toArray();
+        const response = await this.dbInstance.collection(this.collection).find({ $and: param }).toArray();
         return response;
     }
 
     async or(param) {
-        if (!this.check) {
+        if (!this.dbInstance) {
             throw new Error('Please provide collection');
         }
-        if(!param) {
+        if (!param) {
             throw new Error('Please provide parameters')
         }
-        const response = this.check.collection('movieDetails').find({$or: param}).toArray();
+        const response = await this.dbInstance.collection(this.collection).find({ $or: param }).toArray();
         return response;
     }
 
     async count(param) {
-        if (!this.check) {
+        if (!this.dbInstance) {
             throw new Error('Please provide collection');
         }
-        if(!param) {
+        if (!param) {
             throw new Error('Please provide parameters')
         }
-        const response = this.check.collection('movieDetails').countDocuments(param);
+        const response = await this.dbInstance.collection(this.collection).countDocuments(param);
         return response;
     }
 
     async findOne(param) {
-        if (!this.check) {
+        if (!this.dbInstance) {
             throw new Error('Please provide collection');
         }
-        if(!param) {
+        if (!param) {
             throw new Error('Please provide parameters')
         }
-        const response = this.check.collection('movieDetails').findOne(param);
+        const response = await this.dbInstance.collection(this.collection).findOne(param);
         return response;
     }
 }
