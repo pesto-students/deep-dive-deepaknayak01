@@ -1,6 +1,6 @@
 const ODM = require('./index');
 
-const odm = new ODM('mongodb://localhost:27017', 'video', 'movieDetails');
+const odm = new ODM('mongodb://localhost:27017', 'video');
 
 const check = async () => {
     await odm.connect();

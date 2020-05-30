@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb');
+const Collection = require('./collection');
 
 class ODM {
     constructor(url, dbName) {
@@ -39,62 +40,18 @@ class ODM {
     async collection(collectionName) {
         try {
             this.collectionInstance = await this.dbInstance.collection(collectionName);
-            const methods = {
-                all: this.all.bind(this),
-                and: this.and.bind(this),
-                or: this.or.bind(this),
-                count: this.count.bind(this),
-                findOne: this.findOne.bind(this)
-            }
+            const methods = new Collection(this.collectionInstance);
             return methods;
         } catch (e) {
             throw new Error(e.message);
         }
     }
 
-    async all() {
-        try {
-            const response = await this.collectionInstance.find({}).toArray();
-            return response;
-        } catch (error) {
-            throw new Error(error.message)
-        }
-    }
+    async createCollection(collectionName, schema = {}) {
+        if (Object.keys(schema).length > 0) {
 
-    async and(param) {
-        try {
-            const response = await this.collectionInstance.find({ $and: param }).toArray();
-            return response;
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    }
+        } else {
 
-    async or(param) {
-        try {
-            const response = await this.collectionInstance.find({ $or: param }).toArray();
-            return response;
-        } catch (error) {
-            throw new Error(error.message)
-        }
-    }
-
-    async count(param) {
-        try {
-            const response = await this.collectionInstance.countDocuments(param);
-            return response;
-        } catch (error) {
-            throw new Error(error.message)
-        }
-    }
-
-    async findOne(param) {
-
-        try {
-            const response = await this.collectionInstance.findOne(param);
-            return response;
-        } catch (error) {
-            throw new Error(error.message)
         }
     }
 }
