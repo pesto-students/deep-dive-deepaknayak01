@@ -1,12 +1,10 @@
 const ODM = require('./index');
 
 const odm = new ODM('mongodb://localhost:27017', 'video', 'movieDetails');
-let db;
 
 const check = async () => {
     await odm.connect();
-    db = await odm.db();
-    return db;
+    await odm.db();
 }
 
 const getMoviesCount = async () => {
