@@ -48,6 +48,20 @@ class Collection {
             throw new Error(error.message)
         }
     }
+
+    async save(query, param) {
+        try {
+            const saveParam = {$set: param};
+            const response = await this.collectionInstance.update(query, saveParam);
+            if(response && response.result && response.result.nModified > 0) {
+                return 'success';
+            } else {
+                return 'failed';
+            }
+        } catch (error) {
+            throw new Error(error.message)
+        }
+    }
 }
 
 module.exports = Collection;

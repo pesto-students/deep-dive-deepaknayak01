@@ -47,6 +47,7 @@ class ODM {
         }
     }
 
+    // <TODO>
     async createCollection(collectionName, schema = {}) {
         if (Object.keys(schema).length > 0) {
 

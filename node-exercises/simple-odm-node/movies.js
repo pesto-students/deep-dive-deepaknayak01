@@ -25,6 +25,9 @@ const getMoviesCount = async () => {
 
     const findOne = await collection.findOne({ "imdb.rating": 8 });
     //console.log(1, findOne);
+
+    const save = await collection.save({title: "Iron Man 3"}, {myRating: 90});
+    //console.log(1, save);
 };
 
 getMoviesCount();
