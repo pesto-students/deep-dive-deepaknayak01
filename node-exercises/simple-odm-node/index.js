@@ -1,12 +1,12 @@
 const { MongoClient } = require('mongodb');
 
 class ODM {
-    constructor(url, dbName, collection) {
+    constructor(url, dbName) {
         this.connectInstance = '';
         this.dbInstance = '';
         this.url = url;
         this.dbName = dbName;
-        this.collection = collection;
+        this.collectionInstance = '';
     }
 
     async connect() {
@@ -15,8 +15,6 @@ class ODM {
                 throw 'Db not connected. Provide the URL';
             } else if (!this.dbName) {
                 throw 'Db not connected. Provide the Database name';
-            } else if (!this.collection) {
-                throw 'Db not connected. Provide the collection name';
             }
             this.connectInstance = await MongoClient.connect(this.url, { useNewUrlParser: true, useUnifiedTopology: true });
             return this.connectInstance;
@@ -38,76 +36,65 @@ class ODM {
         }
     }
 
-    async all() {
-        if (!this.dbInstance) {
-            throw new Error('Please provide collection');
-        }
+    async collection(collectionName) {
         try {
-            const response = await this.dbInstance.collection(this.collection).find({}).toArray();
+            this.collectionInstance = await this.dbInstance.collection(collectionName);
+            const methods = {
+                all: this.all.bind(this),
+                and: this.and.bind(this),
+                or: this.or.bind(this),
+                count: this.count.bind(this),
+                findOne: this.findOne.bind(this)
+            }
+            return methods;
+        } catch (e) {
+            throw new Error(e.message);
+        }
+    }
+
+    async all() {
+        try {
+            const response = await this.collectionInstance.find({}).toArray();
             return response;
         } catch (error) {
-            throw new Error('Error', error)
+            throw new Error(error.message)
         }
     }
 
     async and(param) {
-        if (!this.dbInstance) {
-            throw new Error('Please provide collection');
-        }
-        if (!param) {
-            throw new Error('Please provide parameters')
-        }
         try {
-            const response = await this.dbInstance.collection(this.collection).find({ $and: param }).toArray();
+            const response = await this.collectionInstance.find({ $and: param }).toArray();
             return response;
         } catch (error) {
-            throw new Error('Error', error);
+            throw new Error(error.message);
         }
     }
 
     async or(param) {
-        if (!this.dbInstance) {
-            throw new Error('Please provide collection');
-        }
-        if (!param) {
-            throw new Error('Please provide parameters')
-        }
         try {
-            const response = await this.dbInstance.collection(this.collection).find({ $or: param }).toArray();
+            const response = await this.collectionInstance.find({ $or: param }).toArray();
             return response;
         } catch (error) {
-            throw new Error('Error', error)
+            throw new Error(error.message)
         }
     }
 
     async count(param) {
-        if (!this.dbInstance) {
-            throw new Error('Please provide collection');
-        }
-        if (!param) {
-            throw new Error('Please provide parameters')
-        }
         try {
-            const response = await this.dbInstance.collection(this.collection).countDocuments(param);
+            const response = await this.collectionInstance.countDocuments(param);
             return response;
         } catch (error) {
-            throw new Error('Error', error)
+            throw new Error(error.message)
         }
     }
 
     async findOne(param) {
-        if (!this.dbInstance) {
-            throw new Error('Please provide collection');
-        }
-        if (!param) {
-            throw new Error('Please provide parameters')
-        }
 
         try {
-            const response = await this.dbInstance.collection(this.collection).findOne(param);
+            const response = await this.collectionInstance.findOne(param);
             return response;
         } catch (error) {
-            throw new Error('Error', error)
+            throw new Error(error.message)
         }
     }
 }
